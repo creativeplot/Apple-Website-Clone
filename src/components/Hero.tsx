@@ -54,7 +54,7 @@ const Hero = () => {
         </div>
       </div>
 
-      <div id='cta' className="flex flex-col items-center opacity-0 translate-y-20">
+      <div id='cta' className="flex flex-col items-center opacity-0 translate-y-10">
         <a href="#highlights" className="btn">Buy</a>
         {heroPrice.map((price) => (
           <p key={price} className="font-normal text-xl">{price}</p>

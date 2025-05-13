@@ -1,6 +1,8 @@
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { watchImg, rightImg } from "../ultis"
+import VideoCarousel from "./VideoCarousel"
+import VideoCarousel2 from "./VideoCar2"
 
 gsap.registerPlugin(useGSAP)
 const Heighlights = () => {
@@ -39,6 +41,8 @@ const Heighlights = () => {
             </p>
           </div>
         </div>
+        <VideoCarousel/>
+        {/* <VideoCarousel2/> */}
       </div>
     </section>
   )

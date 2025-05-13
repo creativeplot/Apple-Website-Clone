@@ -9,7 +9,7 @@ gsap.registerPlugin(useGSAP,ScrollTrigger)
 const VideoCarousel = () => {
     const videoRef = useRef<HTMLVideoElement[]>([]);
     const videoSpanRef = useRef<HTMLSpanElement[]>([])
-    const videoDivRef = useRef<HTMLDivElement[]>([])
+    const videoDivRef = useRef<HTMLSpanElement[]>([])
 
     const [video, setVideo] = useState({
         isEnd: false,
@@ -45,21 +45,6 @@ const VideoCarousel = () => {
     },[isEnd, videoId])
 
     useEffect(() => {
-        if(loadedData.length > 3) {
-            if(!isPlaying) {
-                // added optional chaining (?.) when accessing the video elements, which is a good practice since the elements might not exist when the effect runs.
-                videoRef.current[videoId]?.pause();
-            } else {
-                startPlay && videoRef.current[videoId]?.play()
-            }
-        }
-    },[startPlay, videoId, isPlaying, loadedData])
-
-    const handleLoadedMetadata = (i:number, e:React.SyntheticEvent<HTMLVideoElement>) => {
-        setLoadedData(prev => [...prev, e])
-    }
-
-    useEffect(() => {
         let currentProgress = 0;
         let span = videoSpanRef.current;
 
@@ -69,7 +54,7 @@ const VideoCarousel = () => {
                 onUpdate: () => {
                     const progress = Math.ceil(anim.progress() * 100)
 
-                    if(progress != currentProgress) {
+                    if(progress !== currentProgress) {
                         currentProgress = progress
 
                         gsap.to(videoDivRef.current[videoId],  {
@@ -78,7 +63,7 @@ const VideoCarousel = () => {
 
                         gsap.to(span[videoId], {
                             width: `${currentProgress}%`,
-                            background: 'white'
+                            backgroundColor: 'white'
                         })
                     }
                 },
@@ -111,6 +96,17 @@ const VideoCarousel = () => {
         }
     },[videoId, startPlay])
 
+    useEffect(() => {
+        if(loadedData.length > 3) {
+            if(!isPlaying) {
+                // added optional chaining (?.) when accessing the video elements, which is a good practice since the elements might not exist when the effect runs.
+                videoRef.current[videoId]?.pause();
+            } else {
+                startPlay && videoRef.current[videoId]?.play()
+            }
+        }
+    },[startPlay, videoId, isPlaying, loadedData])
+
     const handleProcess = (type:string, id?: number) => {
         switch(type) {
             case 'video-end':
@@ -131,6 +127,10 @@ const VideoCarousel = () => {
             default:
                 return video;
         }
+    }
+
+    const handleLoadedMetadata = (i:number, e:React.SyntheticEvent<HTMLVideoElement>) => {
+        setLoadedData(prev => [...prev, e])
     }
     
   return (
@@ -176,8 +176,14 @@ const VideoCarousel = () => {
     <div className="relative flex-center mt-10">
         <div className="flex-center py-5 px-7 bg-gray-300 backdrop-blur rounded-full">
             {videoRef.current.map((_, i) => (
-                <span key={i} className="mx-2 h-3 bg-gray-200 rounded-full relative cursor-pointer" ref={(el) => { if(el) (videoSpanRef.current[i] = el)}}>
-                    <span className="absolute h-full w-full rounded-full" ref={(el) => { if(el) (videoSpanRef.current[i] = el)}}/>
+                <span 
+                key={i}
+                className="mx-2 w-3 h-3 bg-gray-200 rounded-full relative cursor-pointer" ref={(el) => { if(el) (videoDivRef.current[i] = el)}}>
+                    <span
+                    className="absolute h-full w-full rounded-full" 
+                    ref={(el) => {
+                        if(el) (videoSpanRef.current[i] = el)
+                        }}/>
                 </span>
             ))}
         </div>
